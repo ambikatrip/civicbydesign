@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NYC Noise Watch</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--side:#14283f;--bg:#f6f6f2;--card:#fff;--ink:#14283f;--mut:#6b7886;--line:#e4e6e3;--acc:#3f6d9c;--hero:#1f4466;--soft:#f1f4f5;--grn:#4f7d6b;--amb:#c58a3e;--pur:#8a64a8;--chip:#e8eff6;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--side:#0c1827;--bg:#101a26;--card:#17232f;--ink:#e8eef4;--mut:#93a1b0;--line:#26343f;--acc:#6ea2d4;--hero:#1f4466;--soft:#1c2a37;--chip:#22364a;color-scheme:dark}}
+:root[data-theme="dark"]{--side:#0c1827;--bg:#101a26;--card:#17232f;--ink:#e8eef4;--mut:#93a1b0;--line:#26343f;--acc:#6ea2d4;--hero:#1f4466;--soft:#1c2a37;--chip:#22364a;color-scheme:dark}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{margin:0;height:100%}
+body{font:14px/1.4 "DM Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex}
+button{font:inherit;color:inherit;cursor:pointer}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+aside{width:260px;background:var(--side);color:#cfdbe8;display:flex;flex-direction:column;padding:28px 22px 18px;flex:none}
+.brand{display:flex;gap:12px;align-items:center;margin-bottom:34px}
+.logo{width:38px;height:38px;border-radius:10px;background:#f3f6f9;color:var(--side);display:grid;place-items:center}
+.brand b{display:block;color:#fff;font-size:16px}.brand small{font-size:11px;letter-spacing:.08em;color:#9fb2c6}
+nav button{display:flex;align-items:center;gap:12px;width:100%;padding:11px 14px;border:0;background:none;color:#cfdbe8;border-radius:10px;font-size:15px;margin-bottom:6px;text-align:left}
+nav button:hover{background:rgba(255,255,255,.07)}
+nav button.on{background:#f3f6f9;color:var(--side);font-weight:600}
+nav button:focus-visible,.btn:focus-visible{outline:2px solid #8fb8e3;outline-offset:2px}
+.badge{margin-left:auto;background:var(--acc);color:#fff;border-radius:99px;font-size:11px;min-width:22px;height:22px;display:grid;place-items:center;font-weight:600}
+.sp{flex:1}
+.priv{border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:14px;display:flex;gap:10px;font-size:12px;color:#9fb2c6;margin-bottom:16px}
+.priv b{display:block;color:#fff;font-size:13px;margin-bottom:2px}
+.me{display:flex;align-items:center;gap:10px;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
+.av{width:42px;height:42px;border-radius:50%;background:#5f8a94;color:#fff;display:grid;place-items:center;font-weight:600;font-size:13px}
+.me b{display:block;color:#fff;font-size:13px}.me small{font-size:12px;color:#9fb2c6}
+main{flex:1;overflow:auto;overflow-x:hidden;padding:44px 48px 60px;min-width:0}
+.wrap{max-width:1060px;margin:0 auto}
+.kick{font-size:12px;letter-spacing:.1em;color:var(--mut);text-transform:uppercase;margin:0 0 8px;font-weight:500}
+h1{font-size:44px;letter-spacing:-.03em;margin:0;font-weight:600;line-height:1.1}
+h2{font-size:22px;margin:4px 0 0;font-weight:500;letter-spacing:-.01em}
+.head{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:22px;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 16px;font-weight:600;color:var(--acc);display:inline-flex;gap:8px;align-items:center}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.hero{background:linear-gradient(100deg,#1b3a5a,#2a5578);border-radius:14px;padding:30px 34px;display:flex;align-items:center;gap:22px;color:#fff;margin-bottom:22px}
+.hero .ic{width:70px;height:70px;border-radius:14px;background:rgba(255,255,255,.12);display:grid;place-items:center}
+.hero .ic svg{width:30px;height:30px}
+.hero small{font-size:11px;letter-spacing:.14em;color:#b9cde0;font-weight:600}
+.hero h3{margin:4px 0 0;font-size:26px;font-weight:500;letter-spacing:-.02em}
+.hero .btn{margin-left:auto;background:#fff;color:#14283f}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:22px}
+.stat{padding:22px;display:flex;gap:16px;align-items:center;text-align:left;width:100%}
+.sic{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;flex:none}
+.stat small{color:var(--mut);display:block}.stat strong{font-size:34px;line-height:1.1;font-weight:600}
+.stat .sub{color:var(--mut);font-size:12.5px}.up{color:#b8741d;font-weight:600}
+.stat .go{margin-left:auto;width:36px;height:36px;border-radius:50%;background:var(--chip);color:var(--acc);display:grid;place-items:center}
+.pad{padding:26px 28px}
+.pill{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600;background:var(--chip);color:var(--acc)}
+.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.inv{background:#f4ecd9;color:#8a6a2c}.pill.res{background:#e3efe9;color:#3f7260}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pill.inv{background:#3a3220}:root:not([data-theme="light"]) .pill.res{background:#1f3a31}}
+.loc{display:flex;gap:8px;align-items:center;color:var(--mut);font-size:13px;margin:10px 0 28px}
+.loc svg{width:16px;height:16px}
+.steps{display:flex;margin:0 0 28px}
+.step{flex:1;text-align:center;position:relative;font-size:11.5px;color:var(--mut)}
+.step i{display:block;width:26px;height:26px;border-radius:50%;margin:0 auto 8px;background:var(--line);position:relative;z-index:1;border:2px solid var(--line)}
+.step.done i{background:var(--acc);border-color:var(--acc)}
+.step.cur i{background:var(--card);border-color:var(--acc);box-shadow:inset 0 0 0 5px var(--acc)}
+.step:not(:first-child):before{content:"";position:absolute;top:12px;left:-50%;width:100%;height:2px;background:var(--line)}
+.step.done:before,.step.cur:before{background:var(--acc)}
+.note{background:var(--soft);border-radius:12px;padding:18px 20px;display:flex;gap:16px;margin-bottom:18px}
+.note b{display:block;margin-bottom:2px}.note span{font-size:12.5px;color:var(--mut)}
+.wide{width:100%;justify-content:center;padding:14px}
+.row{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left}
+.row .tt{font-weight:600}.row small{color:var(--mut);font-size:12.5px;display:block}
+.row time{margin-left:auto;font-size:12px;color:var(--mut)}
+.ric{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;flex:none;background:var(--chip);color:var(--acc)}
+.ric.ok{background:#e3efe9;color:var(--grn)}.ric.am{background:#f4ecd9;color:var(--amb)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ric.ok{background:#1f3a31}:root:not([data-theme="light"]) .ric.am{background:#3a3220}}
+.tabs{display:flex;gap:30px;border-bottom:1px solid var(--line);margin:22px 0}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:12px 4px;color:var(--mut);font-weight:500;margin-bottom:-1px}
+.tabs button.on{color:var(--acc);font-weight:600}
+.tabs em{font-style:normal;background:var(--chip);border-radius:99px;padding:1px 7px;font-size:11px;margin-left:6px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start}
+.rep{display:flex;gap:18px;align-items:center;padding:24px;margin-bottom:16px;width:100%;text-align:left}
+.rep .ric{width:54px;height:54px}
+.rep .id{font-size:11.5px;letter-spacing:.08em;color:var(--mut);font-weight:600;margin-right:8px}
+.rep h4{margin:10px 0 8px;font-size:18px;font-weight:500}
+.meta{display:flex;gap:20px;color:var(--mut);font-size:12.5px;flex-wrap:wrap}
+.meta span{display:flex;gap:6px;align-items:center}.meta svg{width:15px;height:15px}
+.chev{margin-left:auto;color:var(--mut)}
+.side p{color:var(--mut);font-size:13px}
+.side h5{margin:18px 0 6px;font-size:13px}
+.mapbox{overflow:hidden}
+.tool{display:flex;gap:14px;padding:14px;border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap}
+.tool input,.tool select{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:11px 14px;font:inherit}
+.tool input{flex:1;min-width:180px}
+.mapgrid{display:grid;grid-template-columns:minmax(0,1fr) 380px;min-height:620px}
+.view{position:relative;overflow:hidden;background:#f1f2ee;cursor:grab;touch-action:none}
+.view.drag{cursor:grabbing}
+#msvg{width:100%;height:100%;display:block}
+#drw{position:fixed;inset:0;z-index:20;display:none;background:rgba(10,20,32,.45);backdrop-filter:blur(6px);justify-content:flex-end}#drw.on{display:flex}
+.dp{width:min(720px,100%);height:100%;background:var(--bg);overflow:auto;animation:slin .5s cubic-bezier(.2,1.1,.3,1)}@keyframes slin{from{transform:translateX(80px);opacity:0}}
+.dh{background:var(--side);color:#fff;padding:56px 56px 32px;position:relative}.dh h2{font-size:34px;line-height:1.15;margin:10px 0 18px;max-width:520px}.dh .k{font-size:11px;letter-spacing:.14em;color:#9fb2c6;font-weight:600}.dh .loc{color:#cfdbe8;margin:0 0 18px}
+.xb{position:absolute;top:24px;right:24px;width:48px;height:48px;border-radius:50%;border:0;background:#fff;color:#14283f;display:grid;place-items:center}
+.db{padding:36px 56px 56px}.db h3{font-size:22px;font-weight:500;margin:0 0 4px}.db p{color:var(--mut);margin:0 0 26px;font-size:13px}
+.tlr{display:flex;gap:16px;position:relative;padding-bottom:26px}.tlr:not(:last-child):before{content:"";position:absolute;left:12px;top:26px;bottom:0;width:2px;background:var(--line)}
+.tlr i{width:26px;height:26px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;flex:none}.tlr i svg{width:14px;height:14px;stroke-width:2.6}.tlr.pe i{background:var(--bg);border:2px solid var(--line)}.tlr.pe{color:var(--mut)}
+.tlr b{display:block}.tlr small{color:var(--mut);font-size:12.5px}.tlr time{margin-left:auto;font-size:12px;color:var(--mut);white-space:nowrap}
+.warn{background:rgba(197,138,62,.12);border:1px solid rgba(197,138,62,.35);border-radius:12px;padding:20px;display:flex;gap:14px;margin:8px 0 30px;color:var(--ink)}.warn span{display:block;color:var(--mut);font-size:12.5px;margin-top:4px}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.chip{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:16px 6px;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:12px;font-weight:500}.chip.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc);background:var(--chip);color:var(--acc);transform:translateY(-2px)}
+.mh{display:flex;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid var(--line);margin:0 -28px 4px;padding-inline:28px}.mh .xb{position:static;width:44px;height:44px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+@media (max-width:860px){.dh{padding:56px 24px 28px}.db{padding:28px 24px}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .view{background:#142130}}
+.water{fill:#dce8ee}.road{stroke:#d5d9d6;stroke-width:2;fill:none}.hood{font-weight:700;fill:#6c8c7c;letter-spacing:.04em;font-size:26px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .water{fill:#1b3042}:root:not([data-theme="light"]) .road{stroke:#2b3a47}:root:not([data-theme="light"]) .hood{fill:#7fa595}}
+.cl{cursor:pointer;transition:opacity .2s}.cl text{fill:#fff;font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.cl.dim{opacity:.18}
+.hint,.legend{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:10px;font-size:11.5px}
+.hint{top:16px;left:16px;padding:8px 12px;display:flex;gap:8px;align-items:center}
+.legend{left:16px;bottom:16px;padding:14px;width:190px}
+.legend div{display:flex;gap:8px;align-items:center;margin-top:6px}.legend b{font-size:12px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.zoom{position:absolute;right:16px;bottom:16px;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.zoom button{width:42px;height:42px;border:0;background:none;font-size:20px}.zoom button+button{border-top:1px solid var(--line)}
+.panel{padding:26px;border-left:1px solid var(--line)}
+.panel .big{font-size:48px;font-weight:600;letter-spacing:-.03em;line-height:1.1;margin-top:10px}
+.bar{height:4px;background:var(--line);border-radius:4px;margin:6px 0 16px;overflow:hidden}.bar i{display:block;height:100%}
+.bl{display:flex;justify-content:space-between;font-size:13px}
+.nrow{display:flex;gap:18px;align-items:center;padding:22px 26px;border-bottom:1px solid var(--line);width:100%;background:var(--card);border-left:0;border-right:0;border-top:0;text-align:left}
+.nrow.un{background:var(--soft)}.nrow:last-child{border-bottom:0}
+.nrow .tt{font-weight:600}.nrow small{display:block;color:var(--mut)}.nrow .id{font-size:11.5px;color:var(--mut);margin-top:6px}
+.nrow>span:nth-child(2){flex:1;min-width:0}.nrow time{margin-left:auto;width:112px;text-align:right;font-size:12px;color:var(--mut);white-space:nowrap}.nrow .ud,.nrow .chev{flex:none}
+.ud{width:8px;height:8px;border-radius:50%;background:var(--acc);flex:none}
+.sw{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin:0 0 16px;color:var(--mut);font-size:13px}
+.sw input{appearance:none;width:38px;height:22px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;margin:0}
+.sw input:before{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s}
+.sw input:checked{background:var(--acc)}.sw input:checked:before{left:19px}
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink);padding:28px;width:min(460px,92vw)}
+dialog::backdrop{background:rgba(10,20,32,.5)}
+dialog h3{margin:0 0 6px;font-size:22px}dialog label{display:block;font-size:13px;color:var(--mut);margin:14px 0 6px}
+dialog input,dialog select,dialog textarea{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit}
+:root{--sp:cubic-bezier(.34,1.56,.64,1)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,24px) scale(.96);background:var(--side);color:#fff;padding:12px 20px;border-radius:10px;opacity:0;transition:opacity .2s,transform .45s var(--sp);pointer-events:none;z-index:9}.toast.on{opacity:1;transform:translate(-50%,0)}
+@keyframes rin{from{opacity:0;transform:translateY(12px)}}@keyframes fade{from{opacity:0}}@keyframes pop{from{transform:scale(0)}}@keyframes bump{40%{transform:scale(1.35)}}@keyframes grow{from{transform:scaleX(0)}}@keyframes dpop{from{opacity:0;transform:translateY(16px) scale(.96)}}@keyframes fout{to{opacity:0}}@keyframes sout{to{transform:translateX(60px);opacity:0}}
+.pg>*{animation:rin .5s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--n,0)*50ms)}
+.tabs{position:relative}.tabs:after{content:"";position:absolute;bottom:-1px;height:2px;border-radius:2px;background:var(--acc);left:var(--l,0);width:var(--w,0)}.tabs.rdy:after{transition:left .5s var(--sp),width .5s var(--sp)}.tabs button{transition:color .2s}
+.rep{animation:rin .45s cubic-bezier(.2,.8,.2,1) backwards}.rep:nth-child(2){animation-delay:.06s}.rep:nth-child(3){animation-delay:.12s}
+.rep,.stat,.btn,.chip,nav button,.zoom button{transition:transform .35s var(--sp),box-shadow .25s,background .2s,border-color .2s,color .2s}
+.rep:hover,button.stat:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(20,40,63,.45)}
+.rep:active,button.stat:active,.btn:active,.chip:active,nav button:active,.zoom button:active{transform:scale(.97)}
+#drw{animation:fade .25s}#drw.out{animation:fout .22s forwards}#drw.out .dp{animation:sout .22s cubic-bezier(.4,0,1,1) forwards}
+.tlr{animation:rin .45s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--n,3)*70ms + 150ms)}.tlr i{animation:pop .5s var(--sp) backwards;animation-delay:calc(var(--n,3)*70ms + 280ms)}
+dialog[open]{animation:dpop .4s var(--sp)}dialog[open]::backdrop{animation:fade .25s}
+.chip.on svg{animation:bump .4s}
+.cl circle{transition:transform .3s var(--sp);transform-box:fill-box;transform-origin:center;animation:pop .6s var(--sp) backwards;animation-delay:calc(var(--n,0)*50ms + 250ms)}.cl:hover circle{transform:scale(1.12)}
+.bar i{transition:width .8s cubic-bezier(.22,1,.36,1)}
+.nrow{transition:background .4s}.ud{transition:transform .35s var(--sp)}.nrow:not(.un) .ud{transform:scale(0)}
+.step.done:before,.step.cur:before{transform-origin:left;animation:grow .7s cubic-bezier(.22,1,.36,1) backwards;animation-delay:.3s}
+.row .chev,.nrow .chev{margin-left:0}
+html{overflow-x:hidden}.head,.hero{flex-wrap:wrap}.rep>span,.stat>span,.row>span,.tlr>div{min-width:0}.row>span:nth-child(2){flex:1}.dp{overflow-x:hidden}.pill.tipr[data-tip]:after{left:auto;right:0;transform-origin:top right}
+@media (max-width:1100px){main{padding:32px 24px 48px}.cols{grid-template-columns:minmax(0,1fr)}.mapgrid{grid-template-columns:minmax(0,1fr) 300px}h1{font-size:38px}}
+@media (max-width:860px){.nrow{padding:16px;gap:12px}.nrow time{width:auto;max-width:84px;white-space:normal}.rep{padding:16px;gap:12px}.rep .ric{width:44px;height:44px}.legend{width:150px;padding:10px}.tool input{min-width:0}.row time{display:none}}
+dialog{overflow:visible}.ac{position:relative}#sug{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 30px -12px rgba(20,40,63,.4);max-height:250px;overflow:auto;z-index:5;display:none}#sug.on{display:block;animation:rin .2s cubic-bezier(.2,.8,.2,1)}#sug button{display:flex;gap:10px;align-items:center;width:100%;border:0;background:none;padding:11px 14px;text-align:left;cursor:pointer}#sug button:hover,#sug button.hl{background:var(--chip)}#sug svg{width:16px;height:16px;color:var(--mut)}#sug small{margin-left:auto;color:var(--mut);font-size:12px}
+@keyframes growy{from{transform:scaleY(0)}}
+.p30{margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}.g30{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 16px}.g30>div{background:var(--soft);border-radius:10px;padding:12px}.g30 small{display:block;color:var(--mut);font-size:11.5px}.g30 strong{font-size:17px;font-weight:600;letter-spacing:-.01em}.spark{display:flex;gap:2px;align-items:flex-end;height:56px}.spark i{flex:1;background:var(--acc);opacity:.85;border-radius:2px 2px 0 0;transform-origin:bottom;animation:growy .6s cubic-bezier(.22,1,.36,1) backwards;animation-delay:calc(var(--n)*15ms)}.sl{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin:6px 0 20px}
+.pill[data-tip]{position:relative;cursor:help}.pill[data-tip]:after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 8px);width:240px;background:var(--side);color:#fff;border:1px solid rgba(255,255,255,.15);font-weight:400;font-size:12px;line-height:1.45;padding:10px 12px;border-radius:10px;opacity:0;transform:translateY(-4px) scale(.96);transform-origin:top left;pointer-events:none;transition:opacity .15s,transform .3s var(--sp);z-index:30;white-space:normal;text-align:left}.pill[data-tip]:hover:after{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+@media (max-width:860px){body{flex-direction:column}aside{width:100%;flex-direction:row;padding:10px;overflow-x:auto;align-items:center}.brand,.priv,.me,.sp{display:none}nav{display:flex;gap:4px}nav button{width:auto;white-space:nowrap;margin:0;padding:9px 12px;font-size:13px}main{padding:24px 16px}h1{font-size:32px}.stats,.cols,.mapgrid{grid-template-columns:minmax(0,1fr)}.mapgrid{height:auto}.view{height:440px}.panel{border-left:0;border-top:1px solid var(--line)}.hero{flex-wrap:wrap}.hero .btn{margin:0}.steps{font-size:10px}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand"><div class="logo"><svg class="i" viewBox="0 0 24 24"><path d="M4 10v4M8 6v12M12 3v18M16 8v8M20 11v2"/></svg></div><div><b>NYC Noise Watch</b><small>COMMUNITY CLARITY</small></div></div>
+  <nav id="nav"></nav>
+  <div class="sp"></div>
+  <div class="priv"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><div><b>Your privacy matters</b>Community data is aggregated and never identifies reporters.</div></div>
+  <div class="me"><div class="av">AM</div><div><b>Alex Morgan</b><small>Williamsburg, BK</small></div></div>
+</aside>
+<main><div class="wrap" id="app"></div></main>
+
+<dialog id="dlg">
+  <div class="mh"><div><div class="kick" style="font-size:11px">New noise report</div><h3 style="font-size:26px;font-weight:500">What are you hearing?</h3><div style="color:var(--mut)">Share a few details so the issue can be routed correctly.</div></div><button class="xb" id="cx" aria-label="Close"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <label style="color:var(--ink);font-weight:600;margin-top:22px">Type of noise</label><input type="hidden" id="rt" value="Loud music"><div class="chips" id="chips"></div>
+  <label style="color:var(--ink);font-weight:600">Approximate location</label><div class="ac"><input id="rl" placeholder="Street or nearest intersection" autocomplete="off" role="combobox" aria-expanded="false"><div id="sug" role="listbox"></div></div><div style="font-size:12px;color:var(--mut);margin-top:6px">Use a nearby intersection—don’t include an apartment number.</div>
+  <label style="color:var(--ink);font-weight:600">What’s happening?</label><textarea id="rd" rows="4" placeholder="Describe the noise, when it started, and whether it is recurring…"></textarea>
+  <div class="note" style="margin:18px 0;padding:14px 16px;font-size:12.5px;color:var(--mut);align-items:center">Your personal information will never appear on the neighborhood map.</div>
+  <button class="btn pri wide" id="sb" style="padding:18px">Submit report</button>
+  <div style="text-align:center;font-size:11.5px;color:var(--mut);margin-top:12px">Prototype only. Nothing is sent anywhere.</div>
+</dialog>
+<div id="drw"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+var P={
+ grid:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
+ doc:'<path d="M7 3h7l4 4v14H7z"/><path d="M10 12h5M10 16h5M10 8h2"/>',
+ map:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',
+ bell:'<path d="M6 16V11a6 6 0 0112 0v5l2 2H4z"/><path d="M10 21h4"/>',
+ spk:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/>',
+ chk:'<path d="M5 12l5 5 9-10"/>',
+ pin:'<path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+ cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/>',
+ bld:'<path d="M5 21V4h9v17M14 9h5v12M3 21h18M8 8h3M8 12h3M8 16h3"/>',
+ arr:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+ r:'<path d="M9 5l7 7-7 7"/>',
+ clk:'<circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+ tgt:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/>',
+ car:'<path d="M5 17H3v-5l2-5h14l2 5v5h-2"/><path d="M5 12h14M9 17h6"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/>',
+ dots:'<circle cx="6" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="18" cy="12" r="1.3" fill="currentColor"/>'
+};
+function ic(n){return '<svg class="i" viewBox="0 0 24 24">'+P[n]+'</svg>'}
+var reports=[
+ {id:'NYC-25-041829',title:'Loud music from commercial venue',short:'Loud music',loc:'Near Bedford Ave & N 7th St',when:'Apr 18, 2025 at 11:42 PM',ts:new Date('2025-04-18T23:42:00').getTime(),st:'inv',label:'Investigation complete',icon:'spk',tone:'am'},
+ {id:'NYC-25-042103',title:'After-hours construction noise',short:'After-hours construction',loc:'Near Driggs Ave & N 4th St',when:'Apr 21, 2025 at 6:18 AM',ts:new Date('2025-04-21T06:18:00').getTime(),st:'act',label:'Officer dispatched',icon:'bld',tone:''},
+ {id:'NYC-25-032755',title:'Persistent vehicle horn',short:'Vehicle horn',loc:'Near Metropolitan Ave & Roebling St',when:'Mar 27, 2025 at 2:05 AM',ts:new Date('2025-03-27T02:05:00').getTime(),st:'res',label:'Resolved',icon:'car',tone:'ok'}
+];
+var notes=[
+ {t:'Officer dispatched',d:'A local precinct unit has been assigned to your construction noise report.',id:'NYC-25-042103',when:'Today · 8:06 AM',icon:'bld',un:true},
+ {t:'Investigation complete',d:'The officer recorded an outcome for your loud music report.',id:'NYC-25-041829',when:'Apr 19 · 7:52 AM',icon:'chk',un:true},
+ {t:'Report received',d:'Your report was sent to the local precinct for review.',id:'NYC-25-041829',when:'Apr 18 · 11:44 PM',icon:'doc',un:false},
+ {t:'Report resolved',d:'The reported vehicle noise condition was addressed.',id:'NYC-25-032755',when:'Mar 27 · 3:10 AM',icon:'chk',un:false}
+];
+var tab='all',onlyUnread=false,filter='all',sel='Williamsburg';
+var views=[['overview','grid','Overview'],['reports','doc','My Reports'],['map','map','Neighborhood Map'],['notifications','bell','Notifications']];
+var app=document.getElementById('app');
+function unread(){return notes.filter(function(n){return n.un}).length}
+function cur(){var h=location.hash.slice(1);return views.some(function(v){return v[0]==h})?h:'overview'}
+var TIPS={'Officer dispatched':'A local precinct unit has been assigned and is traveling to the reported area. Most visits happen within 8 hours.','Investigation complete':'An officer visited the area and recorded an outcome. Noise often stops before they arrive, so it may not be verified.','Resolved':'The reported noise condition was addressed.','Active':'This report is open and moving through review.','Report submitted':'Your report was recorded and is waiting to reach the local precinct.'};
+function pill(r){var tp=TIPS[r.label];return '<span class="pill '+(r.st=='inv'?'inv':r.st=='res'?'res':'')+'"'+(tp?' data-tip="'+tp+'"':'')+'>'+r.label+'</span>'}
+function sorted(){return reports.slice().sort(function(a,b){return b.ts-a.ts})}
+function renderNav(){
+  var c=cur();
+  document.getElementById('nav').innerHTML=views.map(function(v){
+    return '<button data-v="'+v[0]+'" class="'+(c==v[0]?'on':'')+'">'+ic(v[1])+v[2]+(v[0]=='notifications'&&unread()?'<span class="badge">'+unread()+'</span>':'')+'</button>'}).join('');
+}
+function overview(){
+  var latest=sorted().filter(function(r){return r.st=='act'})[0]||sorted()[0];
+  var active=reports.filter(function(r){return r.st=='act'}).length;
+  return '<div class="kick">Monday, April 28</div><div class="head" style="border:0;padding:0;margin-bottom:22px"><h1>Good morning, Alex</h1><button class="btn" data-v="notifications" aria-label="Notifications">'+ic('bell')+'</button></div>'+
+  '<div class="hero"><div class="ic">'+ic('spk')+'</div><div><small>REPORT A NOISE ISSUE</small><h3>Is noise affecting you right now?</h3></div><button class="btn" data-act="new">Make a report '+ic('arr')+'</button></div>'+
+  '<div class="stats">'+
+   '<button class="card stat" data-v="reports" data-tab="act"><span class="sic" style="background:var(--chip);color:var(--acc)">'+ic('doc')+'</span><span><small>Active reports</small><strong>'+active+'</strong><div class="sub">Officer dispatched</div></span><span class="go">'+ic('arr')+'</span></button>'+
+   '<button class="card stat" data-v="reports" data-tab="done"><span class="sic" style="background:#e3efe9;color:var(--grn)">'+ic('chk')+'</span><span><small>Resolved this year</small><strong>2</strong><div class="sub">All outcomes available</div></span><span class="go">'+ic('arr')+'</span></button>'+
+   '<button class="card stat" data-v="map"><span class="sic" style="background:#f4ecd9;color:var(--amb)">'+ic('spk')+'</span><span><small>Nearby activity</small><strong>186</strong><div class="sub"><span class="up">↑ 14%</span> past 30 days</div></span></button></div>'+
+  '<div class="card pad" style="margin-bottom:22px"><div style="display:flex;justify-content:space-between"><div><div class="kick" style="font-size:11px">Your latest report</div><h2 style="margin:0">'+latest.short+'</h2></div>'+pill({st:'act',label:'Active'}).replace('class="pill ','class="pill tipr ')+'</div>'+
+   '<div class="loc">'+ic('pin')+latest.loc+'</div>'+
+   '<div class="steps"><div class="step done"><i></i>Submitted</div><div class="step done"><i></i>Received</div><div class="step cur"><i></i>Dispatched</div><div class="step"><i></i>Investigated</div></div>'+
+   '<div class="note"><span class="ric" style="background:var(--card);color:var(--ink)">'+ic('clk')+'</span><div><b>An officer has been dispatched</b><span>A local precinct unit is traveling to the reported area. Most visits happen within 8 hours.</span></div></div>'+
+   '<button class="btn wide" data-detail="'+latest.id+'">View report details '+ic('arr')+'</button></div>'+
+  '<div class="card pad"><div style="display:flex;justify-content:space-between;align-items:end"><div><div class="kick" style="font-size:11px">Recent activity</div><h2 style="margin:0">Report updates</h2></div><button class="btn" style="border:0;background:none" data-v="notifications">All notifications '+ic('arr')+'</button></div><div style="margin-top:18px">'+
+   notes.slice(0,2).map(function(n){return '<button class="row" data-detail="'+n.id+'"><span class="ric '+(n.icon=='chk'?'ok':'')+'">'+ic(n.icon)+'</span><span><span class="tt">'+n.t.replace(' to your report','')+(n.icon=='bld'?' to your report':'')+'</span><small>'+(n.icon=='bld'?'After-hours construction':'Loud music')+' · '+n.id+'</small></span><time>'+n.when.replace(' · ',', ')+'</time><span class="chev">'+ic('r')+'</span></button>'}).join('')+'</div></div>';
+}
+function reportsView(){
+  var list=sorted().filter(function(r){return tab=='all'||(tab=='act'?r.st=='act':r.st!='act')});
+  var n=reports.filter(function(r){return r.st=='act'}).length;
+  return '<div class="head" style="border:0;margin:0;padding:0"><h1>My Reports</h1><button class="btn pri" data-act="new">'+ic('plus')+'Make a report</button></div>'+
+  ''+
+  '<div class="tabs"><button data-tab="all" class="'+(tab=='all'?'on':'')+'">All reports</button><button data-tab="act" class="'+(tab=='act'?'on':'')+'">Active<em>'+n+'</em></button><button data-tab="done" class="'+(tab=='done'?'on':'')+'">Completed</button></div>'+
+  '<div class="cols"><div>'+(list.length?list.map(function(r){return '<button class="card rep" data-detail="'+r.id+'"><span class="ric '+r.tone+'">'+ic(r.icon)+'</span><span style="flex:1"><span><span class="id">'+r.id+'</span>'+pill(r)+'</span><h4>'+r.title+'</h4><span class="meta"><span>'+ic('pin')+r.loc+'</span><span>'+ic('cal')+r.when+'</span></span></span><span class="chev">'+ic('r')+'</span></button>'}).join(''):'<div class="card pad" style="color:var(--mut)">No reports here yet.</div>')+'</div>'+
+  '<div class="card pad side"><span class="ric" style="width:44px;height:44px">'+ic('info')+'</span><h2 style="font-size:19px;margin-top:16px">What happens after I report?</h2><p>Noise conditions can change quickly. Officers generally visit within 8 hours and can only act on noise they can verify at the time.</p><hr style="border:0;border-top:1px solid var(--line)"><h5>If the issue continues</h5><p>You can submit another report, add useful timing details, or document a recurring pattern.</p><button class="btn wide" style="margin-top:14px">Learn how reports work '+ic('arr')+'</button></div></div>';
+}
+var cats={music:['Loud music','#3f6d9c'],cons:['Construction','#c58a3e'],veh:['Vehicle noise','#4f7d6b'],oth:['Other','#8a64a8']};
+var clusters=[[790,450,18,'veh','Greenpoint'],[733,552,28,'cons','Greenpoint'],[904,686,52,'music','Williamsburg'],[1048,766,26,'cons','Williamsburg'],[1397,598,21,'cons','Bushwick'],[1005,924,34,'oth','Williamsburg'],[1282,926,47,'music','East Williamsburg'],[647,1050,31,'veh','Lower East Side']];
+function mapView(){
+  var svg='<svg id="msvg" viewBox="0 0 1000 700" preserveAspectRatio="xMinYMin slice"><g id="mg"><path class="water" d="M-200 700 L1000 500 L1500 760 L1700 900 L1500 980 L900 760 L-200 900z"/><path class="water" d="M700 -200 L860 100 L900 400 L820 700 L700 400z"/>'+
+   [[300,200,2200,300],[200,1500,1900,900],[500,-200,2000,1500],[1500,-300,700,1800],[-300,1100,1800,400],[1000,0,1200,2000],[300,2000,1500,300]].map(function(l){return '<path class="road" d="M'+l[0]+' '+l[1]+' L'+l[2]+' '+l[3]+'"/>'}).join('')+
+   '<text class="hood" x="420" y="500">GREENPOINT</text><text class="hood" x="1262" y="575">BUSHWICK</text><text class="hood" x="814" y="885">WILLIAMSBURG</text>'+
+   clusters.map(function(c,i){var col=cats[c[3]][1];return '<g class="cl'+(filter!='all'&&filter!=c[3]?' dim':'')+'" data-i="'+i+'" style="--n:'+i+'" transform="translate('+c[0]+' '+c[1]+')"><circle r="'+(26+c[2]/3)+'" fill="'+col+'" opacity=".18"/><circle r="'+(16+c[2]/5)+'" fill="'+col+'" stroke="#fff" stroke-width="3"/><text>'+c[2]+'</text></g>'}).join('')+'</g></svg>';
+  var leg=Object.keys(cats).map(function(k){return '<div><span class="dot" style="background:'+cats[k][1]+'"></span>'+cats[k][0]+'</div>'}).join('');
+  return '<div class="head"><h1>Neighborhood Noise Map</h1></div>'+
+  '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px;flex-wrap:wrap"><span class="pill res" style="font-weight:500;margin-left:auto">No reporter or exact private location data</span></div>'+
+  '<div class="card mapbox"><div class="tool"><input placeholder="Search an address or intersection" aria-label="Search"><button class="btn" style="color:var(--ink)">Search</button><button class="btn" data-act="loc">'+ic('tgt')+'Use my location</button><select id="flt" aria-label="Noise type"><option value="all">All noise</option>'+Object.keys(cats).map(function(k){return '<option value="'+k+'"'+(filter==k?' selected':'')+'>'+cats[k][0]+'</option>'}).join('')+'</select></div>'+
+  '<div class="mapgrid"><div class="view" id="view">'+svg+'<div class="hint">'+ic('map')+'Drag or scroll to explore</div><div class="legend"><b>Noise categories</b>'+leg+'</div><div class="zoom"><button data-z="1.4" aria-label="Zoom in">+</button><button data-z="0.71" aria-label="Zoom out">−</button></div></div><div class="panel" id="panel"></div></div></div>';
+}
+function panel(){
+  var tot=sel=='Williamsburg'?186:clusters.filter(function(c){return c[4]==sel}).reduce(function(a,c){return a+c[2]},0);
+  var mix=sel=='Williamsburg'?[42,27,14,17]:[35,30,20,15];
+  var cc=[cats.music[1],cats.cons[1],cats.veh[1],cats.oth[1]],nm=['Loud music','Construction','Vehicle noise','Other'];
+  document.getElementById('panel').innerHTML='<div style="display:flex;justify-content:space-between"><span class="kick" style="font-size:11px">Selected area</span><span class="pill">High activity</span></div><h2 style="font-size:26px">'+sel+'</h2><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><div class="big">'+tot+'</div><div style="color:var(--mut);margin-bottom:24px">complaints in the last hour</div><b>Category breakdown</b><div style="margin-top:14px">'+
+  mix.map(function(m,i){return '<div class="bl"><span><span class="dot" style="background:'+cc[i]+';display:inline-block;margin-right:8px"></span>'+nm[i]+'</span><span>'+m+'%</span></div><div class="bar"><i data-w="'+m+'" style="width:0;background:'+cc[i]+'"></i></div>'}).join('')+'</div>'+stats30(tot)+'<div class="note" style="font-size:12.5px;color:var(--mut)">'+ic('chk')+'Shown at neighborhood level to protect resident privacy.</div>';
+  requestAnimationFrame(function(){requestAnimationFrame(function(){document.querySelectorAll('#panel .bar i').forEach(function(b){b.style.width=b.dataset.w+'%'})})});
+  var bg=document.querySelector('#panel .big');if(!RM&&bg){var t0=performance.now();(function f(n){var p=Math.min(1,(n-t0)/650);bg.textContent=Math.round(tot*(1-Math.pow(1-p,3)));if(p<1&&bg.isConnected)requestAnimationFrame(f)})(t0)}
+}
+var z={x:0,y:0,k:1};
+function applyZ(){var g=document.getElementById('mg');if(g)g.setAttribute('transform','translate('+z.x+' '+z.y+') scale('+z.k+')')}
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches,zid=0;
+function animZ(t){var id=++zid;if(RM){z=t;applyZ();return}var a={x:z.x,y:z.y,k:z.k},t0=performance.now();(function f(n){if(id!=zid)return;var p=Math.min(1,(n-t0)/650),e=1-Math.pow(1-p,3);z={x:a.x+(t.x-a.x)*e,y:a.y+(t.y-a.y)*e,k:a.k+(t.k-a.k)*e};applyZ();if(p<1)requestAnimationFrame(f)})(t0)}
+function zoomAt(f,cx,cy,anim){var nk=Math.min(5,Math.max(.35,z.k*f));f=nk/z.k;var t={x:cx-(cx-z.x)*f,y:cy-(cy-z.y)*f,k:nk};if(anim)animZ(t);else{zid++;z=t;applyZ()}}
+function centerOn(x,y,k,anim){var s=document.getElementById('msvg');if(!s)return;var r=s.getBoundingClientRect(),sc=Math.max(r.width/1000,r.height/700);var t={x:r.width/sc/2-x*k,y:r.height/sc/2-y*k,k:k};if(anim)animZ(t);else{zid++;z=t;applyZ()}}
+function svgPt(e){var s=document.getElementById('msvg'),r=s.getBoundingClientRect(),vb=s.viewBox.baseVal,sc=Math.max(r.width/vb.width,r.height/vb.height);return {x:(e.clientX-r.left)/sc,y:(e.clientY-r.top)/sc,sc:sc}}
+function bindMap(){
+  var v=document.getElementById('view'),d=null,moved=0;
+  
+  panel(); centerOn(1030,760,.8);
+  v.addEventListener('pointerdown',function(e){if(e.target.closest('.zoom'))return;zid++;var p=svgPt(e);d={x:p.x,y:p.y,zx:z.x,zy:z.y};moved=0;v.setPointerCapture(e.pointerId);v.classList.add('drag')});
+  v.addEventListener('pointermove',function(e){if(!d)return;var p=svgPt(e);var dx=p.x-d.x,dy=p.y-d.y;moved+=Math.abs(dx)+Math.abs(dy);z.x=d.zx+dx;z.y=d.zy+dy;applyZ()});
+  v.addEventListener('pointerup',function(e){if(d&&moved<4){var c=document.elementFromPoint(e.clientX,e.clientY),g=c&&c.closest&&c.closest('.cl');if(g){sel=clusters[g.dataset.i][4];panel()}}d=null;v.classList.remove('drag')});
+  v.addEventListener('wheel',function(e){e.preventDefault();var p=svgPt(e);zoomAt(e.deltaY<0?1.15:.87,p.x,p.y)},{passive:false});
+  v.querySelectorAll('[data-z]').forEach(function(b){b.onclick=function(e){e.stopPropagation();var r=document.getElementById('msvg').getBoundingClientRect(),sc=svgPt({clientX:r.left+r.width/2,clientY:r.top+r.height/2});zoomAt(+b.dataset.z,sc.x,sc.y,1)}});
+  document.getElementById('flt').onchange=function(e){filter=e.target.value;document.querySelectorAll('.cl').forEach(function(g){var c=clusters[g.dataset.i];g.classList.toggle('dim',filter!='all'&&filter!=c[3])})};
+}
+function notesView(){
+  var list=notes.filter(function(n){return !onlyUnread||n.un});
+  return '<div class="head"><h1>Notifications</h1><button class="btn" data-act="readall">Mark all as read</button></div>'+
+  '<label class="sw">Show unread only<input type="checkbox" id="uo"'+(onlyUnread?' checked':'')+'></label><div class="card" style="overflow:hidden">'+
+  (list.length?list.map(function(n){var i=notes.indexOf(n);return '<button class="nrow'+(n.un?' un':'')+'" data-n="'+i+'"><span class="ric '+(n.icon=='chk'?'':'')+'">'+ic(n.icon)+'</span><span><span class="tt">'+n.t+'</span><small>'+n.d+'</small><div class="id">'+n.id+'</div></span><time>'+n.when+'</time>'+'<span class="ud"></span>'+'<span class="chev">'+ic('r')+'</span></button>'}).join(''):'<div class="pad" style="color:var(--mut)">You are all caught up.</div>')+'</div>';
+}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},2200)}
+function render(nav){
+  var c=cur();renderNav();
+  app.innerHTML=c=='overview'?overview():c=='reports'?reportsView():c=='map'?mapView():notesView();
+  if(c=='map')bindMap();if(c=='reports')initTabs();if(nav)pageIn();
+  document.querySelector('main').scrollTop=0;
+}
+function go(v){if(location.hash.slice(1)==v)render(1);else location.hash=v}
+document.addEventListener('click',function(e){
+  var el=e.target.closest('[data-v],[data-tab],[data-act],[data-n],[data-detail]');if(!el||e.target.closest('#view'))return;
+  var d=el.dataset;
+  if(d.act=='new'){document.getElementById('dlg').showModal();return}
+  if(d.act=='readall'){notes.forEach(function(n){n.un=false});document.querySelectorAll('.nrow.un').forEach(function(r){r.classList.remove('un')});renderNav();if(onlyUnread)setTimeout(render,400);return}
+  if(d.act=='loc'){sel='Williamsburg';panel();centerOn(1000,800,1.15,1);toast('Centered on Williamsburg');return}
+  if(d.n!==undefined){var nn=notes[+d.n];nn.un=false;el.classList.remove('un');renderNav();openDrawer(nn.id);return}
+  if(d.detail){openDrawer(d.detail);return}
+  if(d.tab){if(d.v){tab=d.tab;go(d.v)}else setTab(d.tab);return}
+  if(d.v)go(d.v);
+});
+document.addEventListener('change',function(e){if(e.target.id=='uo'){onlyUnread=e.target.checked;render()}});
+document.getElementById('cx').onclick=function(){document.getElementById('dlg').close()};
+document.getElementById('sb').onclick=function(){
+  var t=document.getElementById('rt').value,l=document.getElementById('rl').value||'Near your location';
+  var now=new Date(),n=reports.length+1;
+  reports.push({id:'NYC-25-04'+(2200+n),title:t,short:t,loc:l,when:'Apr 28, 2025 at '+now.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}),ts:Date.now()+1e11,st:'act',label:'Report submitted',icon:(CH.filter(function(c){return c[0]==t})[0]||[0,'spk'])[1],tone:''});
+  notes.unshift({t:'Report received',d:'Your '+t.toLowerCase()+' report was sent to the local precinct for review.',id:'NYC-25-04'+(2200+n),when:'Just now',icon:'doc',un:true});
+  document.getElementById('dlg').close();tab='all';toast('Report submitted');go('reports');render();
+};
+function moveInd(){var t=document.querySelector('.tabs'),b=t&&t.querySelector('button.on');if(b){t.style.setProperty('--l',b.offsetLeft+'px');t.style.setProperty('--w',b.offsetWidth+'px')}}
+function initTabs(){moveInd();var t=document.querySelector('.tabs');requestAnimationFrame(function(){requestAnimationFrame(function(){t.classList.add('rdy')})})}
+function setTab(t){tab=t;var tmp=document.createElement('div');tmp.innerHTML=reportsView();document.querySelector('.cols>div').innerHTML=tmp.querySelector('.cols>div').innerHTML;document.querySelectorAll('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.tab==t)});moveInd()}
+function pageIn(){app.classList.remove('pg');void app.offsetWidth;Array.prototype.forEach.call(app.children,function(c,i){c.style.setProperty('--n',i)});app.classList.add('pg')}
+function closeDrawer(){var el=document.getElementById('drw');if(!el.classList.contains('on')||el.classList.contains('out'))return;el.classList.add('out');setTimeout(function(){el.classList.remove('on','out')},RM?0:220)}
+var S30={'Williamsburg':[14,'11 PM – 1 AM','5.4 hrs'],'Greenpoint':[9,'7 – 9 AM','6.1 hrs'],'Bushwick':[6,'10 PM – 12 AM','6.8 hrs'],'East Williamsburg':[11,'9 PM – 11 PM','5.9 hrs'],'Lower East Side':[4,'12 – 2 AM','5.2 hrs']};
+function stats30(tot){var s=S30[sel]||S30.Williamsburg,h='';for(var i=0;i<30;i++){var v=35+((i*37+tot*7)%45)+(i%7>4?12:0);h+='<i style="--n:'+i+';height:'+v+'%"></i>'}
+  return '<div class="p30"><b>Past 30 days</b><div class="g30"><div><small>Complaints</small><strong>'+(tot*26).toLocaleString()+'</strong></div><div><small>vs. prior 30 days</small><strong class="up">↑ '+s[0]+'%</strong></div><div><small>Peak hours</small><strong>'+s[1]+'</strong></div><div><small>Avg. officer response</small><strong>'+s[2]+'</strong></div></div><div class="spark" aria-label="Daily complaints, last 30 days">'+h+'</div><div class="sl"><span>30 days ago</span><span>Today</span></div></div>'}
+var PLACES=['Bedford Ave & N 7th St','Bedford Ave & N 4th St','Driggs Ave & N 4th St','Driggs Ave & N 7th St','Metropolitan Ave & Roebling St','Metropolitan Ave & Bedford Ave','Wythe Ave & N 8th St','Kent Ave & N 7th St','Berry St & N 9th St','Grand St & Bedford Ave','Grand St & Union Ave','Lorimer St & Metropolitan Ave','Graham Ave & Metropolitan Ave','Manhattan Ave & Greenpoint Ave','Nassau Ave & Manhattan Ave','Franklin St & Greenpoint Ave','Flushing Ave & Broadway','Myrtle Ave & Broadway','Knickerbocker Ave & Myrtle Ave','Montrose Ave & Bushwick Ave','Havemeyer St & S 4th St','Roebling St & N 4th St'];
+var sg=document.getElementById('sug'),ri=document.getElementById('rl'),hi=-1,cur2=[];
+function hideSug(){sg.classList.remove('on');ri.setAttribute('aria-expanded','false')}
+function pick(p){ri.value='Near '+p;hideSug()}
+function showSug(){var ws=ri.value.toLowerCase().replace(/^near /,'').replace(/&|\band\b/g,' ').split(/\s+/).filter(Boolean);
+  cur2=PLACES.filter(function(p){var l=p.toLowerCase().replace(/&/g,' ');return ws.every(function(w){return l.indexOf(w)>-1})}).slice(0,6);hi=-1;
+  if(!cur2.length||ri.value=='Near '+cur2[0]){hideSug();return}
+  sg.innerHTML=cur2.map(function(p,i){return '<button type="button" role="option" data-i="'+i+'">'+ic('pin')+'<span>'+p.replace(/&/g,'&amp;')+'</span><small>Brooklyn</small></button>'}).join('');sg.classList.add('on');ri.setAttribute('aria-expanded','true')}
+ri.addEventListener('input',showSug);ri.addEventListener('focus',showSug);ri.addEventListener('blur',function(){setTimeout(hideSug,120)});
+ri.addEventListener('keydown',function(e){if(!sg.classList.contains('on'))return;var b=sg.children;if(e.key=='ArrowDown'||e.key=='ArrowUp'){e.preventDefault();hi=(hi+(e.key=='ArrowDown'?1:-1)+b.length)%b.length;Array.prototype.forEach.call(b,function(x,i){x.classList.toggle('hl',i==hi)})}else if(e.key=='Enter'&&hi>-1){e.preventDefault();pick(cur2[hi])}else if(e.key=='Escape'){e.preventDefault();e.stopPropagation();hideSug()}});
+sg.addEventListener('mousedown',function(e){var b=e.target.closest('button');if(b){e.preventDefault();pick(cur2[+b.dataset.i])}});
+document.getElementById('dlg').addEventListener('close',hideSug);
+var DET={
+'NYC-25-041829':{tl:[['Report submitted','Your noise complaint was recorded in this prototype.','Apr 18, 2025 · 11:42 PM'],['Report received','The report was routed to the local precinct for review.','Apr 18, 2025 · 11:44 PM'],['Officer dispatched','A unit was assigned to visit the reported area.','Apr 19, 2025 · 7:08 AM'],['Investigation complete','Officers visited the location, but the reported noise was no longer occurring.','Apr 19, 2025 · 7:52 AM']],warn:1},
+'NYC-25-042103':{tl:[['Report submitted','Your noise complaint was recorded in this prototype.','Apr 21, 2025 · 6:18 AM'],['Report received','The report was routed to the local precinct for review.','Apr 21, 2025 · 6:20 AM'],['Officer dispatched','A local precinct unit is traveling to the reported area. Most visits happen within 8 hours.','Today · 8:06 AM']],pend:'Investigation complete'},
+'NYC-25-032755':{tl:[['Report submitted','Your noise complaint was recorded in this prototype.','Mar 27, 2025 · 2:05 AM'],['Report received','The report was routed to the local precinct for review.','Mar 27, 2025 · 2:07 AM'],['Officer dispatched','A unit was assigned to visit the reported area.','Mar 27, 2025 · 2:40 AM'],['Report resolved','The reported vehicle noise condition was addressed.','Mar 27, 2025 · 3:10 AM']]}
+};
+function openDrawer(id){
+  var r=reports.filter(function(x){return x.id==id})[0];if(!r)return;
+  var D=DET[id]||{tl:[['Report submitted','Your noise complaint was recorded in this prototype.','Just now'],['Report received','The report was routed to the local precinct for review.','Just now']],pend:'Officer dispatched'};
+  var tl=D.tl.map(function(t,i){return '<div class="tlr" style="--n:'+i+'"><i>'+ic('chk')+'</i><div><b>'+t[0]+'</b><small>'+t[1]+'</small></div><time>'+t[2]+'</time></div>'}).join('')+(D.pend?'<div class="tlr pe"><i></i><div><b>'+D.pend+'</b><small>Waiting on the next update.</small></div></div>':'');
+  var w=D.warn?'<div class="warn">'+ic('info')+'<div><b>Why couldn’t the noise be verified?</b><span>Noise often stops before an officer arrives. Without observing the condition, officers cannot take enforcement action. This does not invalidate your experience.</span></div></div>':'';
+  var el=document.getElementById('drw');
+  el.innerHTML='<div class="dp" role="dialog" aria-label="Report details"><div class="dh"><button class="xb" data-close aria-label="Close">'+ic('chk').replace(/<path[^>]*\/>/,'<path d="M6 6l12 12M18 6L6 18"/>')+'</button><div class="k">REPORT '+r.id+'</div><h2>'+r.title+'</h2><div class="loc">'+ic('pin')+r.loc+' · Brooklyn</div>'+pill(r)+'</div><div class="db"><h3>Report timeline</h3><p>A clear record of every step taken on your complaint.</p>'+tl+w+'<hr style="border:0;border-top:1px solid var(--line);margin:0 0 28px"><h3>Is the issue still happening?</h3><p>Recurring details can help establish a pattern without exposing your information.</p><div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn pri" data-act="new" data-close>Report recurring noise</button><button class="btn" data-more>Add more information</button></div></div></div>';
+  el.classList.remove('out');el.classList.add('on');
+}
+document.getElementById('drw').addEventListener('click',function(e){
+  if(e.target.closest('[data-more]')){toast('Prototype only');return}
+  if(e.target.id=='drw'||e.target.closest('[data-close]'))closeDrawer();
+});
+document.addEventListener('keydown',function(e){if(e.key=='Escape')closeDrawer()});
+var CH=[['Loud music','spk'],['Construction','bld'],['Vehicle noise','car'],['Other','dots']];
+function chips(){var h=document.getElementById('chips'),v=document.getElementById('rt').value;if(!h.children.length)h.innerHTML=CH.map(function(c){return '<button type="button" class="chip" data-c="'+c[0]+'">'+ic(c[1])+c[0]+'</button>'}).join('');Array.prototype.forEach.call(h.children,function(b){b.classList.toggle('on',b.dataset.c==v)})}
+document.getElementById('chips').addEventListener('click',function(e){var b=e.target.closest('[data-c]');if(b){document.getElementById('rt').value=b.dataset.c;chips()}});
+document.getElementById('dlg').addEventListener('close',function(){document.getElementById('rt').value='Loud music';document.getElementById('rl').value='';document.getElementById('rd').value='';chips()});
+chips();
+window.addEventListener('hashchange',render);
+render();
+</script>
+</body>
+</html>
